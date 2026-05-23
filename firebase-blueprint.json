@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account registration with role-based access control.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Equal to authenticating Firebase Auth UID" },
+        "name": { "type": "string", "description": "The user's full name" },
+        "email": { "type": "string", "format": "email", "description": "Primary email address" },
+        "role": { "type": "string", "enum": ["Super Admin", "Admin", "Staff", "User"] },
+        "status": { "type": "string", "enum": ["Active", "Suspended"] },
+        "addedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "role", "status", "addedAt"]
+    },
+    "MenuItem": {
+      "title": "Menu Item",
+      "description": "Item of fine cuisine details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "string" },
+        "categories": { "type": "array" },
+        "dietary": { "type": "object" },
+        "image": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "categories"]
+    },
+    "GalleryItem": {
+      "title": "Gallery Item",
+      "description": "Image within the photography showcase.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["id", "category", "title", "image"]
+    },
+    "EventEnquiry": {
+      "title": "Event Enquiry",
+      "description": "Enquiry for private dining, celebrations, and shoots.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "date": { "type": "string" },
+        "guests": { "type": "integer" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "details": { "type": "string" },
+        "internalNotes": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "date", "type", "status"]
+    },
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "Inbox feedback, compliments, or private queries.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "subject", "message", "date", "status"]
+    },
+    "AdminSettings": {
+      "title": "Admin Settings",
+      "description": "Operational configurations of the house.",
+      "type": "object",
+      "properties": {
+        "reservationAppLink": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "emailAddress": { "type": "string" },
+        "physicalAddress": { "type": "string" },
+        "instagramLink": { "type": "string" },
+        "googleMapsEmbed": { "type": "string" },
+        "heroHeadline": { "type": "string" },
+        "heroSub": { "type": "string" }
+      },
+      "required": ["reservationAppLink"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Store user accounts with specific RBAC role allocations."
+    },
+    "/menu_items/{itemId}": {
+      "schema": "MenuItem",
+      "description": "Dynamic digital menu of Ona Lagos."
+    },
+    "/gallery_items/{itemId}": {
+      "schema": "GalleryItem",
+      "description": "Bespoke gallery collection showcase."
+    },
+    "/event_enquiries/{enquiryId}": {
+      "schema": "EventEnquiry",
+      "description": "Private event applications and shoot request registrations."
+    },
+    "/contact_messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Direct communication letters."
+    },
+    "admin_settings/operational": {
+      "schema": "AdminSettings",
+      "description": "Global settings parameters."
+    }
+  }
+}

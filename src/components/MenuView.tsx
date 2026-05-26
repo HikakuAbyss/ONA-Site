@@ -16,7 +16,7 @@ export default function MenuView({ onOpenReservation }: MenuViewProps) {
   const [catalogFields, setCatalogFields] = useState<any[]>([]);
   const [previewMode, setPreviewMode] = useState<"published" | "draft">(() => {
     const saved = localStorage.getItem("ona_preview_mode");
-    return (saved === "draft" || saved === "published") ? saved : "draft";
+    return (saved === "draft" || saved === "published") ? saved : "published";
   });
 
   useEffect(() => {

@@ -47,6 +47,7 @@ import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { DEFAULT_CMS } from "./components/WebsiteCustomizer";
 import AuthModal from "./components/AuthModal";
+import PremiumAuthViews from "./components/PremiumAuthViews";
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>("home");
@@ -128,10 +129,33 @@ export default function App() {
   const [reservationType, setReservationType] = useState("Standard Dining");
   const [dbKey, setDbKey] = useState(0);
 
+  // Local Mock State OR Firebase Auth State Tracking
+  const [currentUser, setCurrentUser] = useState<any>(() => {
+    const saved = localStorage.getItem("ona_mock_user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [userRole, setUserRole] = useState<string>(() => {
+    const saved = localStorage.getItem("ona_mock_role");
+    return saved || "User";
+  });
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [guestWelcomeOpen, setGuestWelcomeOpen] = useState(false);
+  const [authBannerMsg, setAuthBannerMsg] = useState("");
+
   const [previewMode, setPreviewMode] = useState<"published" | "draft">(() => {
     const saved = localStorage.getItem("ona_preview_mode");
-    return (saved === "draft" || saved === "published") ? saved : "draft";
+    return (saved === "draft" || saved === "published") ? saved : "published";
   });
+
+  const isAuthorizedForDraft = currentUser && ["Super Admin", "Admin", "Manager", "Content Editor"].includes(userRole);
+
+  useEffect(() => {
+    if (!isAuthorizedForDraft && previewMode !== "published") {
+      setPreviewMode("published");
+      localStorage.setItem("ona_preview_mode", "published");
+      window.dispatchEvent(new Event("ona_preview_mode_changed"));
+    }
+  }, [currentUser, userRole, previewMode, isAuthorizedForDraft]);
 
   useEffect(() => {
     const handlePreviewChange = () => {
@@ -149,17 +173,6 @@ export default function App() {
     setPreviewMode(mode);
     window.dispatchEvent(new Event("ona_preview_mode_changed"));
   };
-  
-  // Local Mock State OR Firebase Auth State Tracking
-  const [currentUser, setCurrentUser] = useState<any>(() => {
-    const saved = localStorage.getItem("ona_mock_user");
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [userRole, setUserRole] = useState<string>(() => {
-    const saved = localStorage.getItem("ona_mock_role");
-    return saved || "User";
-  });
-  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   // Newsletter signup state
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -427,12 +440,26 @@ export default function App() {
       )}
 
       {/* Premium Sticky Navigation */}
-      {currentTab !== "admin" && (
+      {currentTab !== "admin" && currentTab !== "login" && currentTab !== "signup" && (
         <Navbar
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           onOpenReservation={() => handleOpenReservation("Standard Dining")}
           cms={cms}
+          currentUser={currentUser}
+          userRole={userRole}
+          onSignOut={async () => {
+            localStorage.removeItem("ona_mock_user");
+            localStorage.removeItem("ona_mock_role");
+            try {
+              await signOut(auth);
+            } catch (e) {
+              console.warn(e);
+            }
+            setCurrentUser(null);
+            setUserRole("User");
+            setCurrentTab("home");
+          }}
         />
       )}
 
@@ -1104,6 +1131,33 @@ export default function App() {
               />
             </motion.div>
           )}
+
+          {(currentTab === "login" || currentTab === "signup") && (
+            <motion.div
+              key="auth-coord-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <PremiumAuthViews
+                isSignUpInitial={currentTab === "signup"}
+                onClose={() => setCurrentTab("home")}
+                onAuthSuccess={(user: any, role: string) => {
+                  setCurrentUser(user);
+                  setUserRole(role);
+                  setCurrentTab("home");
+                  if (role === "Guest") {
+                    setGuestWelcomeOpen(true);
+                  } else {
+                    setAuthBannerMsg(`Verified connection. Welcome to La Maison Ona, ${user.displayName || "Patron"} [${role}].`);
+                    setTimeout(() => setAuthBannerMsg(""), 6000);
+                  }
+                }}
+                cms={cms}
+              />
+            </motion.div>
+          )}
         </AnimatePresence>
       </main>
 
@@ -1247,7 +1301,7 @@ export default function App() {
       )}
 
       {/* FLOATING REAL-TIME PREVIEW MODE SELECTOR CONTROL */}
-      {currentTab !== "admin" && (
+      {currentTab !== "admin" && isAuthorizedForDraft && (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1294,6 +1348,92 @@ export default function App() {
           }
         }}
       />
+
+      {/* 2. DYNAMIC GUEST WELCOME SCREEN CARD OVERLAY */}
+      <AnimatePresence>
+        {guestWelcomeOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setGuestWelcomeOpen(false)}
+              className="absolute inset-0 bg-neutral-950/90 backdrop-blur-md"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative w-full max-w-md bg-[#0b0b0b] border border-[#C5A070]/30 p-8 text-center shadow-[0_15px_60px_rgba(181,137,75,0.2)] text-[#FBF9F4]"
+            >
+              {/* Subtle gold accent split boundary line */}
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A070] to-transparent" />
+              <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-[#C5A070]/10 blur-2xl rounded-full" />
+
+              <div className="w-12 h-12 rounded-full border border-[#C5A070]/30 flex items-center justify-center mx-auto mb-5 text-[#C5A070] bg-[#12110e]">
+                <Sparkles className="w-5 h-5 animate-pulse" />
+              </div>
+
+              <h4 className="font-serif text-2xl tracking-[0.18em] font-light text-white mb-2 uppercase">
+                Ona Guest Protocol
+              </h4>
+              <p className="font-serif italic text-xs text-[#C5A070] tracking-wide mb-6">
+                "Explore Ona Lagos as a guest or sign in for a more personalized experience."
+              </p>
+
+              <div className="text-left text-xs space-y-3.5 mb-8 text-gray-400 font-sans font-light leading-relaxed">
+                <p>
+                  Welcome to La Maison Ona. As an honored guest of our digital residence, you enjoy full uninhibited exploration access:
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-gray-300">
+                  <div className="flex items-center gap-1.5 p-1 bg-white/5 border border-white/5">
+                    <span className="text-[#C5A070]">✓</span> View Daily Menus
+                  </div>
+                  <div className="flex items-center gap-1.5 p-1 bg-white/5 border border-white/5 flex-nowrap">
+                    <span className="text-[#C5A070]">✓</span> Browse Lifestyle
+                  </div>
+                  <div className="flex items-center gap-1.5 p-1 bg-white/5 border border-white/5">
+                    <span className="text-[#C5A070]">✓</span> Reserve Dining
+                  </div>
+                  <div className="flex items-center gap-1.5 p-1 bg-white/5 border border-white/5">
+                    <span className="text-[#C5A070]">✓</span> Gallery Index
+                  </div>
+                </div>
+                <p className="text-[10px] text-gray-500 italic">
+                  Note: Custom member configurations, CMS workspace toggles, and reservation ledgers are restricted to authenticated society members.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setGuestWelcomeOpen(false)}
+                className="w-full bg-[#C5A070] hover:bg-[#8e734e] text-black font-sans text-sm uppercase tracking-widest font-bold py-3.5 transition-all duration-300 cursor-pointer text-center"
+              >
+                Indulge & Explore
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 3. DYNAMIC GLOWING VERIFICATION BANNER TOAST */}
+      <AnimatePresence>
+        {authBannerMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="fixed bottom-8 right-8 z-50 max-w-sm"
+          >
+            <div className="bg-[#0b0b0b]/95 border border-[#C5A070]/60 text-[#FBF9F4] p-4 shadow-2xl backdrop-blur-lg relative overflow-hidden flex items-center gap-3">
+              <div className="w-1 absolute inset-y-0 left-0 bg-[#C5A070]" />
+              <div className="font-serif italic text-xs text-slate-200 pl-2 leading-relaxed text-left">
+                {authBannerMsg}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -35,13 +35,16 @@ export default function AboutView({ onOpenReservation }: AboutViewProps) {
         {/* Story Text (7 cols) */}
         <div className="lg:col-span-7 space-y-6 text-gray-300 font-sans text-sm md:text-base font-light leading-relaxed">
           <p className="font-serif text-2xl text-white font-light leading-relaxed tracking-wide italic border-l-2 border-gold-400/40 pl-4">
-            “Ona” — meaning ‘Path’ or ‘Artistry’ in Yoruba — represents our culinary philosophy. We trace a path from ancestral West African kitchens to the summits of modern global gastronomy.
+            “At Ona, every detail is designed to leave a mark — from the atmosphere and hospitality to the flavours that celebrate contemporary African cuisine.”
           </p>
           <p>
-            Located in the cosmopolitan heart of Victoria Island, Lagos, Ona is a celebration of West African culinary craftsmanship. Founded as a temple of modern luxury hospitality, we reinterpret indigenous ingredients — from fermented locust beans (iru) and scented native leaves (effirin) to dried hibiscus petals (zobo) and grains of paradise — into visual, sensory masterpieces.
+            Inspired by the Edo meaning of <span className="font-serif italic text-gold-300">‘Ona’</span>, a mark or sign, Ona Lagos exists as more than a restaurant. It is a refined cultural and dining experience where modern African identity meets elegance, connection, and unforgettable moments. Our brand identity is culturally rooted, leaving a silent signature of excellence on every guest.
           </p>
           <p>
-            At Ona, we believe luxury should never be austere. Inspired by the traditional spirit of “Ekaabo” (warm welcome) and the rich multi-generational fabric of Lagos families, our space provides a sophisticated sanctuary that is deeply welcoming. Here, we cater with equal meticulousness to diplomats, artists, romantic celebrations, and children trying their first mild suya skewers.
+            Located in the cosmopolitan heart of Victoria Island, Lagos, Ona is a destination designed to leave a lasting mark through food, culture, atmosphere, and hospitality. We reinterpret indigenous West African ingredients — from fermented locust beans (iru) and scented native leaves (effirin) to dried hibiscus petals (zobo) and grains of paradise — into visual, sensory masterpieces of distinction.
+          </p>
+          <p>
+            At Ona, we believe luxury should never be austere. Inspired by our signature hospitality and the rich multi-generational fabric of modern families, our space provides a sophisticated sanctuary that is deeply welcoming. Here, we cater with equal meticulousness to diplomats, artists, romantic celebrations, and guests seeking memorable culinary experiences.
           </p>
           
           <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs tracking-wider uppercase">
@@ -164,7 +167,7 @@ export default function AboutView({ onOpenReservation }: AboutViewProps) {
             onClick={onOpenReservation}
             className="cursor-pointer bg-gold-500 hover:bg-gold-600 border border-gold-400/30 text-black font-sans text-xs uppercase tracking-[0.2em] font-semibold py-4 px-10 transition-colors"
           >
-            Become Part of Our Path
+            Experience the Distinction of Ona
           </button>
         </div>
       </section>

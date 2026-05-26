@@ -86,7 +86,7 @@ export default function Hero({ onOpenReservation, onViewMenu, cms }: HeroProps) 
             transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
             className="font-sans text-xs sm:text-sm md:text-base lg:text-lg font-light text-gray-300 max-w-2xl mx-auto leading-relaxed"
           >
-            {cms?.hero?.subtitle || "Refined African cuisine, curated dining experiences, and warm cultural hospitality in Victoria Island, Lagos."}
+            {cms?.hero?.subtitle || "Ona Lagos is a modern African fine-dining destination designed to leave a lasting mark through food, culture, atmosphere, and hospitality."}
           </motion.p>
         </div>
 

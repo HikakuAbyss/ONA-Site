@@ -53,7 +53,7 @@ export default function HomeSections({
       id: "i4",
       image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=80",
       likes: "1,450 likes",
-      caption: "The signature Sunday Roast Brunch feast. Slow-fired alligator-pepper crusted lamb centerpiece.",
+      caption: "The signature Sunday Roast feast. Slow-fired alligator-pepper crusted lamb centerpiece.",
       user: "gourmet_goddess"
     },
     {
@@ -95,7 +95,7 @@ export default function HomeSections({
                         <span className="font-serif italic text-gold-300">Modern Gastronomy</span>
                       </h2>
                       <p className="font-sans text-sm text-gray-300 leading-relaxed font-light">
-                        {sec.description || "Ona is the Yoruba word representing path, line, and decorative artistry. At Ona Lagos, we walk a bold path: harvesting West African crop diversity, ancestral clay roasts, and secret herbal reductions, and presenting them through a lens of global culinary excellence."}
+                        {sec.description || "Ona is inspired by the Edo meaning of a mark or a sign. At Ona Lagos, every detail is meticulously designed to leave a lasting mark—from our signature hospitality and atmosphere to modern African fine dining that marries heritage with global excellence."}
                       </p>
                       <p className="font-sans text-sm text-gray-400 leading-relaxed font-light">
                         Set in a sanctuary of hand-forged mud walls, golden arches, and soft woven fabrics, we celebrate the true luxury of sub-Saharan hospitality. A space crafted with meticulous care to honor business relations, fine diplomats, and dining generations of families alike.
@@ -123,6 +123,126 @@ export default function HomeSections({
                   </div>
                 </section>
               );
+            case "lifestyle":
+              {
+                const activeFeaturedLifestyle = (() => {
+                  try {
+                    const local = localStorage.getItem("ona_lifestyle_products");
+                    if (local) {
+                      const parsed = JSON.parse(local);
+                      return parsed.filter((p: any) => p.publishStatus === "Published" && p.featured);
+                    }
+                  } catch (e) {}
+                  return [];
+                })();
+
+                return (
+                  <section id="lifestyle-section" key={sec.id} className="max-w-7xl mx-auto px-6 md:px-12 py-20 border-b border-gold-400/10 space-y-12 bg-root-custom text-left">
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                      <div className="space-y-2">
+                        <span className="font-sans text-xs uppercase tracking-widest text-gold-400 font-light block">
+                          {sec.tagline || "Art of Living"}
+                        </span>
+                        <h3 className="font-serif text-3xl sm:text-4xl text-white font-light">
+                          {sec.heading || "Ona Lifestyle Collection"}
+                        </h3>
+                        <p className="font-sans text-xs text-gray-400 font-light max-w-xl">
+                          {sec.description || "Bespoke fine-dining pieces and premium merchandise inspired by the Ona Lagos aesthetic."}
+                        </p>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => {
+                            setCurrentTab("ona-lifestyle");
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          className="cursor-pointer font-sans text-xs uppercase tracking-widest text-gold-300 hover:text-white flex items-center gap-1.5 border border-gold-400/20 px-5 py-2.5 transition-colors focus:outline-none"
+                        >
+                          <span>Browse Lifestyle Shop</span>
+                          <span>&rarr;</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {activeFeaturedLifestyle.length === 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="bg-[#12110E] p-10 border border-gold-400/10 flex flex-col justify-between h-80 relative overflow-hidden group">
+                          <div className="absolute top-0 right-0 w-48 h-48 bg-gold-400/5 rounded-full blur-2xl" />
+                          <div>
+                            <span className="text-[10px] text-gold-300 font-mono tracking-widest uppercase">Atmospherics</span>
+                            <h4 className="font-serif text-2xl text-white font-light mt-2">Ona Signature Scented Candle</h4>
+                            <p className="text-xs text-gray-400 mt-2 font-light">Alligator pepper, dried sweet orange, and smoked vetiver inside coal-baked mud-baked jar wares.</p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setCurrentTab("ona-lifestyle");
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            className="text-[10px] uppercase font-bold text-gold-300 hover:text-white flex items-center gap-1.5 mt-4 self-start border-b border-gold-400"
+                          >
+                            Acquire Candle <ArrowRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <div className="bg-[#12110E] p-10 border border-gold-400/10 flex flex-col justify-between h-80 relative overflow-hidden group">
+                          <div className="absolute top-0 right-0 w-48 h-48 bg-gold-400/5 rounded-full blur-2xl" />
+                          <div>
+                            <span className="text-[10px] text-gold-300 font-mono tracking-widest uppercase">Sovereign hard wood</span>
+                            <h4 className="font-serif text-2xl text-white font-light mt-2">Lagos Hardwood Host Platter</h4>
+                            <p className="text-xs text-gray-400 mt-2 font-light">Artisanal hand carved West African mahogany board with brushed brass geometric detailing.</p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setCurrentTab("ona-lifestyle");
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            className="text-[10px] uppercase font-bold text-gold-300 hover:text-white flex items-center gap-1.5 mt-4 self-start border-b border-gold-400"
+                          >
+                            Acquire Platter <ArrowRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {activeFeaturedLifestyle.slice(0, 4).map((p: any) => (
+                          <div 
+                            key={`featured-home-${p.id}`}
+                            onClick={() => {
+                              setCurrentTab("ona-lifestyle");
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            className="bg-[#12110E] border border-gold-400/10 hover:border-gold-300/30 overflow-hidden group cursor-pointer transition-all duration-300 flex flex-col justify-between"
+                          >
+                            <div className="aspect-square relative overflow-hidden bg-white/5">
+                              <img 
+                                src={p.imageUrl} 
+                                alt={p.name} 
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                referrerPolicy="no-referrer"
+                              />
+                              <div className="absolute top-3 left-3 bg-[#12110E]/90 text-[8px] uppercase tracking-widest text-[#F4EFE6] px-2 py-0.5 rounded-none font-mono">
+                                {p.category}
+                              </div>
+                            </div>
+                            <div className="p-4 space-y-3">
+                              <h4 className="font-serif text-sm text-white font-light tracking-wide line-clamp-1 group-hover:text-gold-300 transition-colors">
+                                {p.name}
+                              </h4>
+                              <div className="flex items-center justify-between border-t border-gold-400/10 pt-2.5">
+                                <span className="text-xs font-serif text-gold-300">
+                                  {new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(p.price).replace("NGN", "₦")}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-widest text-white/50 border-b border-white/20 pb-0.5 group-hover:text-white group-hover:border-white transition-colors">
+                                  View Item &rarr;
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                );
+              }
             case "dishes":
               return (
                 <section id="dishes-section" key={sec.id} className="max-w-7xl mx-auto px-6 md:px-12 py-20 border-b border-gold-400/10 space-y-12 bg-root-custom text-left">
@@ -198,7 +318,7 @@ export default function HomeSections({
                         {sec.tagline || "Weekend Festivities"}
                       </span>
                       <h3 className="font-serif text-3xl sm:text-5xl font-light text-white leading-normal">
-                        {sec.heading || "The Imperial Sunday Roast & Live Afro-Jazz Brunch"}
+                        {sec.heading || "The Imperial Sunday Roast"}
                       </h3>
                       <p className="font-sans text-sm text-gray-300 leading-relaxed font-light">
                         {sec.description || "Sunday is a sacred day of assembly in Lagos. Our grand fireplace comes alive at noon with slow oak-roasted Imperial Leg of Lamb encrusted in alligator pepper, honey, and local tarragon, alongside golden rosemary yams and whole caramelized guinea fowl."}
@@ -209,7 +329,7 @@ export default function HomeSections({
 
                       <div className="pt-2 flex flex-wrap gap-4 items-center">
                         <button
-                          onClick={() => handleOpenReservation("Sunday Roast & Brunch")}
+                          onClick={() => handleOpenReservation("Sunday Roast")}
                           className="cursor-pointer bg-gold-500 hover:bg-gold-600 border border-gold-400/30 text-black font-sans text-xs uppercase font-semibold tracking-widest py-3 px-6"
                         >
                           Book Sunday Roast

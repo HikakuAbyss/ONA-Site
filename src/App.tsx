@@ -38,6 +38,7 @@ import ContactView from "./components/ContactView";
 import BackgroundMusic from "./components/BackgroundMusic";
 import ReservationModal from "./components/ReservationModal";
 import ExploreLegacyWidget from "./components/ExploreLegacyWidget";
+import OnaLifestyleView from "./components/OnaLifestyleView";
 import AdminDashboard from "./components/AdminDashboard";
 
 // Firebase Context Imports
@@ -328,7 +329,7 @@ export default function App() {
               </div>
               
               <p className="text-[10px] uppercase font-sans tracking-[0.3em] text-gray-500 font-light">
-                {cms?.branding?.tagline || "Where Heritage Meets High Modern Gastronomy"}
+                {cms?.branding?.tagline || "Marked by culture. Refined by experience."}
               </p>
             </motion.div>
           </motion.div>
@@ -529,7 +530,7 @@ export default function App() {
                       <span className="font-serif italic text-gold-300">High Modern Gastronomy</span>
                     </h2>
                     <p className="font-sans text-sm text-gray-300 leading-relaxed font-light">
-                      “Ona” is the Yoruba word representing path, line, and decorative artistry. At Ona Lagos, we walk a bold path: harvesting rich West African crop diversity, ancestral clay roasts, and secret herbal reductions, and presenting them through a lens of global culinary excellence.
+                      “Ona” is inspired by the Edo meaning of a mark or a sign. At Ona Lagos, every detail is meticulously designed to leave a lasting mark—from our signature hospitality and atmosphere to modern African fine dining that marries heritage with global excellence.
                     </p>
                     <p className="font-sans text-sm text-gray-400 leading-relaxed font-light">
                       Set in a sanctuary of hand-forged mud walls, golden arches, and soft woven organic fabrics, we celebrate the true luxury of sub-Saharan hospitality. A space crafted with meticulous care to honor business relations, fine diplomats, and dining generations of families alike.
@@ -655,8 +656,8 @@ export default function App() {
                   <div className="lg:col-span-6 space-y-6">
                     <span className="font-sans text-xs uppercase tracking-[0.3em] text-gold-300 font-normal">Weekend Festivities</span>
                     <h3 className="font-serif text-3xl sm:text-5xl font-light text-white">
-                      The Imperial Sunday Roast &amp; <br />
-                      <span className="font-serif italic text-gold-300">Live Afro-Jazz Brunch</span>
+                      The Imperial <br />
+                      <span className="font-serif italic text-gold-300">Sunday Roast (Only)</span>
                     </h3>
                     <p className="font-sans text-sm text-gray-300 leading-relaxed font-light">
                       Sunday is a sacred day of assembly in Lagos. Our grand fireplace comes alive at noon with slow oak-roasted Imperial Leg of Lamb encrusted in alligator pepper, honey, and local tarragon, alongside golden rosemary yams and whole caramelized guinea fowl.
@@ -667,7 +668,7 @@ export default function App() {
 
                     <div className="pt-2 flex flex-wrap gap-4 items-center">
                       <button
-                        onClick={() => handleOpenReservation("Sunday Roast & Brunch")}
+                        onClick={() => handleOpenReservation("Sunday Roast")}
                         className="cursor-pointer bg-gold-500 hover:bg-gold-600 border border-gold-400/30 text-black font-sans text-xs uppercase font-semibold tracking-widest py-3 px-6"
                       >
                         Book Sunday Roast
@@ -1032,7 +1033,7 @@ export default function App() {
               transition={{ duration: 0.5 }}
             >
               <KidsDietaryView
-                onOpenReservation={() => handleOpenReservation("Sunday Roast & Brunch")}
+                onOpenReservation={() => handleOpenReservation("Sunday Roast")}
                 onViewMenu={() => setCurrentTab("menu")}
               />
             </motion.div>
@@ -1059,6 +1060,21 @@ export default function App() {
               transition={{ duration: 0.5 }}
             >
               <GalleryView />
+            </motion.div>
+          )}
+
+          {currentTab === "ona-lifestyle" && (
+            <motion.div
+              key="ona-lifestyle-screen"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 15 }}
+              transition={{ duration: 0.5 }}
+            >
+              <OnaLifestyleView 
+                onOpenReservation={() => handleOpenReservation("Standard Dining")}
+                cms={cms}
+              />
             </motion.div>
           )}
 
@@ -1111,7 +1127,7 @@ export default function App() {
                 </h3>
               )}
               <p className="font-sans text-xs sm:text-sm text-gray-400 font-light leading-relaxed max-w-sm">
-                An architectural masterwork of fine culture and sensory chemistry located in Victoria Island, Lagos. Guided by family respect, culinary art, and the warm breeze of Atlantic scent leaf.
+                Ona Lagos — Modern African dining marked by culture, flavour, and experience. Located in Victoria Island, Lagos, designed to leave a lasting impression of signature hospitality.
               </p>
               <div className="flex gap-4 items-center pl-1 text-gray-500">
                 <a href="https://instagram.com/ona_lagos" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300 transition-colors" aria-label="Instagram Profile">
@@ -1145,8 +1161,8 @@ export default function App() {
                   Dinner: 6 PM - 11:30 PM
                 </p>
                 <p>
-                  <span className="text-white block font-serif text-xs">Sundays (Brunch)</span>
-                  Brunch &amp; Roast: 11:30 AM - 4 PM<br />
+                  <span className="text-white block font-serif text-xs">Sundays (Sunday Roast Only)</span>
+                  Sunday Roast: 11:30 AM - 4 PM<br />
                   Dinner: 6 PM - 10:30 PM
                 </p>
               </div>

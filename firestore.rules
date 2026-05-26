@@ -97,6 +97,13 @@ service cloud.firestore {
              msg.message is string && msg.message.size() <= 5000;
     }
 
+    function isValidOnaLifestyleProduct(item) {
+      return item.id is string &&
+             item.name is string && item.name.size() <= 150 &&
+             item.category in ["Merchandise", "Food Product", "Drink Product", "Gift Item", "Home & Lifestyle", "Limited Edition", "Other"] &&
+             item.publishStatus in ["Draft", "Published", "Unpublished"];
+    }
+
     // 1. Users Collection rules
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
@@ -172,6 +179,13 @@ service cloud.firestore {
     match /testimonials/{testId} {
       allow read: if true; // Public reviews stream
       allow write: if isStaff();
+    }
+
+    // 9. Ona Lifestyle Products rules
+    match /onaLifestyleProducts/{productId} {
+      allow read: if true; // Publicly visible to browse
+      allow write: if isAdmin() && isValidOnaLifestyleProduct(incoming());
+      allow delete: if isAdmin();
     }
   }
 }

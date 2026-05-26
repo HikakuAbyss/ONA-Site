@@ -78,12 +78,12 @@ export default function PrivateDiningView({ onOpenReservation }: PrivateDiningVi
       {/* Editorial Header */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-16 text-center">
         <div className="space-y-4">
-          <span className="font-sans text-xs uppercase tracking-[0.3em] text-gold-400 block font-light">Exclusive Curations</span>
+          <span className="font-sans text-xs uppercase tracking-[0.3em] text-gold-400 block font-light">Bespoke Impressions</span>
           <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light tracking-wide text-white leading-tight">
-            Private Dining & Bespoke Celebrations
+            Celebrate Moments Designed to Leave a Mark
           </h2>
-          <p className="text-gray-400 font-sans text-xs sm:text-sm tracking-widest max-w-xl mx-auto leading-relaxed">
-            Crafting indelible moments. Our rooms, menus, and visual spaces are customized for your most cherished achievements in Lagos.
+          <p className="text-gray-400 font-sans text-xs sm:text-sm tracking-widest max-w-2xl mx-auto leading-relaxed">
+            Curated private dining experiences with lasting impressions. Inspired by 'Ona' — the Edo meaning of a mark or sign — we construct signature moments written in excellence, exceptional flavour, and memorable hospitality.
           </p>
           <div className="w-16 h-px bg-gold-400/50 mx-auto mt-4" />
         </div>

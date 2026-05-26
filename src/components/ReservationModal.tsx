@@ -11,7 +11,7 @@ interface ReservationModalProps {
 export default function ReservationModal({ isOpen, onClose, initialType = "Standard Dining" }: ReservationModalProps) {
   const [guests, setGuests] = useState("2 Guests");
   const [kids, setKids] = useState("0 Children");
-  const [experience, setExperience] = useState(initialType);
+  const [experience, setExperience] = useState(initialType === "Sunday Roast & Brunch" ? "Sunday Roast" : initialType);
   const [seating, setSeating] = useState("Main Dining Saloon");
   const [occasion, setOccasion] = useState("Standard Dining");
   const [dietary, setDietary] = useState("");
@@ -154,7 +154,7 @@ export default function ReservationModal({ isOpen, onClose, initialType = "Stand
                       className="w-full bg-[#141414] border border-white/5 rounded-none px-3 py-2 text-sm text-[#fbf9f4] focus:outline-none focus:border-gold-400 transition-colors"
                     >
                       <option value="Standard Dining">Gourmet Dinner</option>
-                      <option value="Sunday Roast & Brunch">Sunday Roast / Brunch</option>
+                      <option value="Sunday Roast">Sunday Roast Only</option>
                       <option value="Chef's Multi-Course Tasting Menu">Chef's Multi-Course Tasting</option>
                       <option value="Private Celebration / Birthday">Private Celebration / Birthday</option>
                       <option value="Romantic Proposal Package">Romantic Marriage Proposal</option>

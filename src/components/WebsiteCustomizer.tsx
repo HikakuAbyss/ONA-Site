@@ -185,7 +185,7 @@ export const DEFAULT_CMS: CMSSettings = {
   },
   hero: {
     title: "Experience Modern African Fine Dining",
-    subtitle: "Refined African cuisine, curated dining experiences, and warm cultural hospitality in Victoria Island, Lagos.",
+    subtitle: "Ona Lagos is a modern African fine-dining destination designed to leave a lasting mark through food, culture, atmosphere, and hospitality.",
     backgroundImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80",
     backgroundVideo: "",
     ctaText: "Reserve a Table",
@@ -195,14 +195,15 @@ export const DEFAULT_CMS: CMSSettings = {
     contentOrder: ["title", "subtitle", "cta"]
   },
   homepageSections: [
-    { id: "about", name: "About Narrative", visible: true, order: 1, heading: "La Maison Ona", description: "Ona is the Yoruba word representing path, line, and decorative artistry. At Ona Lagos, we walk a bold path: harvesting rich West African crop diversity.", bgImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=80" },
+    { id: "about", name: "About Narrative", visible: true, order: 1, heading: "La Maison Ona", description: "Ona means ‘a mark’ or ‘a sign’ in the Edo language. At Ona, every detail is designed to leave a lasting mark — through food, culture, atmosphere, and signature hospitality.", bgImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=80" },
     { id: "dishes", name: "Featured Dishes", visible: true, order: 2, heading: "The Masterful Spheres", description: "We recreate classic culinary legacies — Efo Riro, Asun, Jollof — utilizing French techniques.", bgImage: "" },
     { id: "sunday", name: "Sunday Roast", visible: true, order: 3, heading: "Sunday Harvest & Roast", description: "Traditional joint carvings, slow-braised short ribs, and local music curations.", bgImage: "" },
     { id: "kids", name: "Kids Dining", visible: true, order: 4, heading: "Junior Culinary Journeys", description: "Crafted specifically for raw taste sensibilities with genuine premium nourishment.", bgImage: "" },
     { id: "cocktails", name: "Cocktails Ambiance", visible: true, order: 5, heading: "Ancestral Mixology", description: "We fuse single-estate local spirits with botanicals and palm infusions.", bgImage: "" },
     { id: "gallery", name: "Visual Gallery", visible: true, order: 6, heading: "The Sanctuary Framed", description: "A glimpse into our visual space and sensory platings.", bgImage: "" },
     { id: "testimonials", name: "Guest Words", visible: true, order: 7, heading: "Diplomatic Endorsements", description: "Unedited guest reviews from local and global gastronomes.", bgImage: "" },
-    { id: "events", name: "Private Events CTA", visible: true, order: 8, heading: "Private Curations & Movie Shoots", description: "For celebrations or premium backdrops, Ona Lagos offers curated solutions.", bgImage: "" },
+    { id: "lifestyle", name: "Ona Lifestyle", visible: true, order: 8, heading: "Ona Lifestyle Collection", description: "Bespoke fine-dining pieces and premium merchandise inspired by the Ona Lagos aesthetic.", bgImage: "" },
+    { id: "events", name: "Private Events CTA", visible: true, order: 9, heading: "Private Curations & Movie Shoots", description: "For celebrations or premium backdrops, Ona Lagos offers curated solutions.", bgImage: "" },
   ],
   menuAppearance: {
     layout: "grid",
@@ -262,7 +263,7 @@ export const DEFAULT_CMS: CMSSettings = {
       { day: "Wednesdays", hours: "Closed (No Operations)" },
       { day: "Fridays", hours: "12:30 PM - 4:00 PM / 6:00 PM - Midnight" },
       { day: "Saturdays", hours: "11:00 AM - 4:00 PM / 6:00 PM - Midnight" },
-      { day: "Sundays (Brunch & Roast)", hours: "11:00 AM - 4:30 PM / 6:00 PM - 10:30 PM" }
+      { day: "Sundays (Sunday Roast Only)", hours: "11:00 AM - 4:30 PM / 6:00 PM - 10:30 PM" }
     ],
     reservationLink: "https://reservations.onalagos.com",
     googleMaps: "https://maps.google.com"

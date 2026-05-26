@@ -42,7 +42,7 @@ export default function ContactView({ onOpenReservation }: ContactViewProps) {
       title: "Cultural Chronicles",
       icon: <Instagram className="w-5 h-5 text-gold-400" />,
       detail: "@ona_lagos",
-      subDetail: "Follow our gastronomic path",
+      subDetail: "Follow our culinary mark of culture",
       href: "https://instagram.com/ona_lagos"
     }
   ];

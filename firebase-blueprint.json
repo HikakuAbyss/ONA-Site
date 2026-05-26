@@ -90,9 +90,42 @@
         "heroSub": { "type": "string" }
       },
       "required": ["reservationAppLink"]
+    },
+    "OnaLifestyleProduct": {
+      "title": "Ona Lifestyle Product",
+      "description": "Curated lifestyle pieces and merchandise for luxury retail.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "category": { "type": "string", "enum": ["Merchandise", "Food Product", "Drink Product", "Gift Item", "Home & Lifestyle", "Limited Edition", "Other"] },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "galleryImages": { "type": "array" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "stockStatus": { "type": "string", "enum": ["In Stock", "Low Stock", "Out of Stock", "Preorder"] },
+        "quantityAvailable": { "type": "number" },
+        "featured": { "type": "boolean" },
+        "publishStatus": { "type": "string", "enum": ["Draft", "Published", "Unpublished"] },
+        "displayOrder": { "type": "number" },
+        "tags": { "type": "array" },
+        "ctaType": { "type": "string", "enum": ["Order via WhatsApp", "Enquire Now", "Coming Soon", "View Details"] },
+        "ctaLink": { "type": "string" },
+        "seoTitle": { "type": "string" },
+        "seoDescription": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "price", "stockStatus", "publishStatus", "ctaType"]
     }
   },
   "firestore": {
+    "/onaLifestyleProducts/{productId}": {
+      "schema": "OnaLifestyleProduct",
+      "description": "Bespoke Ona Lifestyle items collection."
+    },
     "/users/{userId}": {
       "schema": "User",
       "description": "Store user accounts with specific RBAC role allocations."

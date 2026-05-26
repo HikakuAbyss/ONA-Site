@@ -17,6 +17,7 @@ export default function Navbar({ currentTab, setCurrentTab, onOpenReservation, c
     { id: "about", label: "Our Story" },
     { id: "menu", label: "The Menu" },
     { id: "kids-dietary", label: "Family & Dietary" },
+    { id: "ona-lifestyle", label: "Lifestyle" },
     { id: "events", label: "Private Events" },
     { id: "gallery", label: "Gallery" },
     { id: "contact", label: "Contact & Hours" }

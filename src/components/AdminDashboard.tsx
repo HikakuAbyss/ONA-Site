@@ -38,11 +38,13 @@ import {
   CheckSquare,
   LockKeyhole,
   Palette,
-  Database
+  Database,
+  ShoppingBag
 } from "lucide-react";
 import { MenuItem, GalleryItem, Testimonial, MENU_ITEMS, GALLERY_ITEMS, TESTIMONIALS } from "../types";
 import WebsiteCustomizer from "./WebsiteCustomizer";
 import ContentManager from "./ContentManager";
+import OnaLifestyleManager from "./OnaLifestyleManager";
 
 // Firebase Imports
 import { auth, db, handleFirestoreError, OperationType } from "../firebase";
@@ -432,7 +434,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
       // 5. Reservations
       const localRes = localStorage.getItem("ona_mock_reservations");
       const defaultRes: ReservationEnquiry[] = [
-        { id: "res_1", name: "Chief Adeleke Victor", email: "adeleke@lagosoil.com", phone: "+234 803 111 2222", date: "2026-06-11", time: "19:30", guests: 6, type: "Sunday Roast & Brunch", status: "Confirmed", notes: "VIP table requested" },
+        { id: "res_1", name: "Chief Adeleke Victor", email: "adeleke@lagosoil.com", phone: "+234 803 111 2222", date: "2026-06-11", time: "19:30", guests: 6, type: "Sunday Roast", status: "Confirmed", notes: "VIP table requested" },
         { id: "res_2", name: "Dr. Michelle Williams", email: "michelle@embassy.org", phone: "+234 902 444 8888", date: "2026-06-12", time: "20:00", guests: 2, type: "Standard Dining", status: "Confirmed", notes: "Window seat overlooking courtyard" }
       ];
       if (localRes) {
@@ -562,7 +564,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
       snap.forEach(d => list.push(d.data() as ReservationEnquiry));
       if (snap.empty) {
         const initialList: ReservationEnquiry[] = [
-          { id: "res_1", name: "Chief Adeleke Victor", email: "adeleke@lagosoil.com", phone: "+234 803 111 2222", date: "2026-06-11", time: "19:30", guests: 6, type: "Sunday Roast & Brunch", status: "Confirmed", notes: "VIP table requested" },
+          { id: "res_1", name: "Chief Adeleke Victor", email: "adeleke@lagosoil.com", phone: "+234 803 111 2222", date: "2026-06-11", time: "19:30", guests: 6, type: "Sunday Roast", status: "Confirmed", notes: "VIP table requested" },
           { id: "res_2", name: "Dr. Michelle Williams", email: "michelle@embassy.org", phone: "+234 902 444 8888", date: "2026-06-12", time: "20:00", guests: 2, type: "Standard Dining", status: "Confirmed", notes: "Window seat overlooking courtyard" }
         ];
         initialList.forEach(item => setDoc(doc(db, "reservations", item.id), item));
@@ -1157,6 +1159,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
               <div className="flex flex-col space-y-1">
                 {[
                   { id: "overview", label: "Overview", icon: BarChart3, roles: ["Super Admin", "Manager", "Content Editor", "Reservation Staff"] },
+                  { id: "ona-lifestyle", label: "Ona Lifestyle", icon: ShoppingBag, roles: ["Super Admin", "Admin", "Manager", "Content Editor", "Reservation Staff"] },
                   { id: "content-manager", label: "Content Manager", icon: Database, roles: ["Super Admin", "Manager", "Content Editor", "Admin"] },
                   { id: "reservations", label: "Reservations", icon: CalendarDays, roles: ["Super Admin", "Manager", "Reservation Staff"] },
                   { id: "menu", label: "Menu Catalog", icon: UtensilsCrossed, roles: ["Super Admin", "Manager", "Content Editor"] },
@@ -2006,6 +2009,11 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
               {/* PANEL 12: WEBSITE CUSTOMIZATION / CMS */}
               {activePanel === "website-customization" && (
                 <WebsiteCustomizer currentUser={currentUser} />
+              )}
+
+              {/* PANEL 14: ONA LIFESTYLE PRODUCT MANAGER */}
+              {activePanel === "ona-lifestyle" && (
+                <OnaLifestyleManager currentUser={currentUser} />
               )}
 
               {/* PANEL 13: CONTENT MANAGER */}

@@ -35,6 +35,31 @@ export interface GalleryItem {
   image: string;
 }
 
+export interface OnaLifestyleProduct {
+  id: string;
+  name: string;
+  slug: string;
+  category: "Merchandise" | "Food Product" | "Drink Product" | "Gift Item" | "Home & Lifestyle" | "Limited Edition" | "Other";
+  description: string;
+  imageUrl: string;
+  featuredImage?: string;
+  galleryImages?: string[];
+  price: number;
+  discountPrice: number | null;
+  stockStatus: "In Stock" | "Low Stock" | "Out of Stock" | "Preorder";
+  quantityAvailable: number | null;
+  featured: boolean;
+  publishStatus: "Draft" | "Published" | "Unpublished";
+  displayOrder: number;
+  tags: string[];
+  ctaType: "Order via WhatsApp" | "Enquire Now" | "Coming Soon" | "View Details";
+  ctaLink: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Testimonial {
   name: string;
   role: string;
@@ -374,6 +399,6 @@ export const OPENING_HOURS = [
   { day: "Wednesdays", lunch: "Closed", dinner: "Closed (No Operations)" },
   { day: "Fridays", lunch: "12:30 PM - 4:00 PM", dinner: "6:00 PM - Midnight" },
   { day: "Saturdays", lunch: "11:00 AM - 4:00 PM", dinner: "6:00 PM - Midnight" },
-  { day: "Sundays (Brunch & Roast)", lunch: "11:00 AM - 4:30 PM", dinner: "6:00 PM - 10:30 PM" },
+  { day: "Sundays (Sunday Roast Only)", lunch: "11:00 AM - 4:30 PM", dinner: "6:00 PM - 10:30 PM" },
   { day: "Mondays", lunch: "Closed", dinner: "Closed for Private Curations" }
 ];

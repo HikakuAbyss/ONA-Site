@@ -72,18 +72,26 @@ export default function ExploreLegacyWidget({
   return (
     <>
       {/* Floating Trigger Button */}
-      <div className="fixed bottom-24 lg:bottom-6 right-6 z-50 flex items-center gap-2">
+      <motion.div
+        drag
+        dragMomentum={false}
+        whileDrag={{ scale: 1.05 }}
+        className="fixed bottom-24 lg:bottom-6 right-6 z-50 flex items-center gap-2 select-none active:cursor-grabbing cursor-grab touch-none"
+      >
         {/* Cute AI Speech Bubble saying "Explore with ONA!" */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8, x: 20 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ delay: 0.6, duration: 0.5, type: "spring", stiffness: 120 }}
-          className="relative bg-[#FCFAF7] text-gold-700 font-sans text-[11px] leading-none tracking-widest py-2.5 px-3.5 rounded-xl border border-gold-500/40 whitespace-nowrap shadow-[0_4px_20px_rgba(181,137,75,0.15)] flex items-center gap-1.5 select-none"
+          className="relative bg-[#FCFAF7] border border-gold-500/30 text-gold-700 font-sans text-[11px] leading-tight tracking-widest py-1.5 px-3 rounded-lg whitespace-nowrap shadow-[0_4px_20px_rgba(181,137,75,0.15)] flex flex-col items-center select-none"
         >
-          <span className="font-sans uppercase text-[10px] tracking-widest font-medium text-gold-800">Explore with ONA</span>
-          <span className="inline-block animate-bounce text-gold-600">✨</span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-sans uppercase text-[10px] tracking-widest font-medium text-gold-800">Explore with ONA</span>
+            <span className="inline-block animate-bounce text-gold-600">✨</span>
+          </div>
+          <span className="text-[8px] text-gray-400 font-light lowercase font-sans select-none tracking-normal">(drag to move)</span>
           {/* Speech Bubble Arrow pointing to the right */}
-          <div className="absolute -right-[4.5px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#FCFAF7] border-r border-t border-gold-500/40 rotate-45" />
+          <div className="absolute -right-[4.5px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#FCFAF7] border-r border-t border-gold-500/30 rotate-45" />
         </motion.div>
 
         <button
@@ -138,7 +146,7 @@ export default function ExploreLegacyWidget({
             </div>
           </div>
         </button>
-      </div>
+      </motion.div>
 
       {/* Accessible Interactive Legacy Overlay Panel */}
       <AnimatePresence>

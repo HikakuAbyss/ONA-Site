@@ -213,7 +213,7 @@ export default function PremiumAuthViews({ isSignUpInitial = false, onClose, onA
         return;
       }
       if (password !== confirmPassword) {
-        setError("Credential validation mismatch. Password coordinates do not align.");
+        setError("Password coordinates do not match. Please verify your entries.");
         setLoading(false);
         return;
       }
@@ -509,7 +509,7 @@ export default function PremiumAuthViews({ isSignUpInitial = false, onClose, onA
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <label className="block font-sans text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400">
-                    Secret Coordinates Key
+                    Password
                   </label>
                   {!isSignUp && (
                     <button
@@ -546,7 +546,7 @@ export default function PremiumAuthViews({ isSignUpInitial = false, onClose, onA
             {isSignUp && !forgotMode && (
               <div className="space-y-1.5">
                 <label className="block font-sans text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400">
-                  Align coordinates (Confirm string)
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />

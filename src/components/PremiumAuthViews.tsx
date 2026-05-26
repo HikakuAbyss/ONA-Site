@@ -52,7 +52,7 @@ export default function PremiumAuthViews({ isSignUpInitial = false, onClose, onA
   const luxuryQuotes = [
     {
       txt: "A symphony of ancient smoke, rich soil, and Atlantic tides. Traditional gastronomy curated for contemporary royalty.",
-      author: "Ade Adeyemi — founding Chef De Cuisine, Ona"
+      author: "Obehi Ekhomu — founding Chef De Cuisine, Ona"
     },
     {
       txt: "The ultimate meeting of Lagosian high society, traditional visual tapestries, and experimental fine dining.",

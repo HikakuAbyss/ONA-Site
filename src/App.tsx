@@ -1268,7 +1268,12 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 font-sans font-light gap-4">
             <p>© 2026 Ona Lagos Hospitality Ltd. Victoria Island, Lagos. All Rights Reserved.</p>
             <div className="flex gap-6 items-center">
-              <a href="https://reserve.onalagos.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-300">reserve.onalagos.com</a>
+              <button 
+                onClick={() => handleOpenReservation()} 
+                className="hover:text-gold-300 cursor-pointer bg-transparent border-none text-[11px] font-sans font-light"
+              >
+                Reserve a Table
+              </button>
               <button onClick={() => setCurrentTab("contact")} className="hover:text-gold-300 cursor-pointer">Valet &amp; Directions</button>
               <button
                 onClick={() => {

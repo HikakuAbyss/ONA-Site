@@ -26,6 +26,7 @@ export interface MenuItem {
     isMild?: boolean;
   };
   image: string;
+  galleryImages?: string[];
 }
 
 export interface GalleryItem {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { MENU_ITEMS, MenuItem } from "../types";
-import { Flame, Leaf, Snowflake, ShieldAlert, Sparkles, Filter, ChevronRight, X, CalendarCheck2 } from "lucide-react";
+import { Flame, Leaf, Snowflake, ShieldAlert, Sparkles, Filter, ChevronRight, ChevronLeft, Image as ImageIcon, X, CalendarCheck2 } from "lucide-react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -18,6 +18,10 @@ export default function MenuView({ onOpenReservation }: MenuViewProps) {
     const saved = localStorage.getItem("ona_preview_mode");
     return (saved === "draft" || saved === "published") ? saved : "published";
   });
+  
+  // High-fidelity food detailed slideshow states
+  const [selectedDishDetail, setSelectedDishDetail] = useState<MenuItem | null>(null);
+  const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
 
   useEffect(() => {
     const handlePreviewChange = () => {
@@ -260,15 +264,29 @@ export default function MenuView({ onOpenReservation }: MenuViewProps) {
                   className="bg-black/40 border border-[#1b1b1b] hover:border-gold-400/30 transition-all duration-300 group flex flex-col justify-between"
                 >
                   {/* Photo area with luxury badges */}
-                  <div className="relative overflow-hidden aspect-[4/3] bg-neutral-900 shrink-0">
+                  <div 
+                    onClick={() => {
+                      setSelectedDishDetail(item);
+                      setActiveGalleryIdx(0);
+                    }}
+                    className="relative overflow-hidden aspect-[4/3] bg-neutral-900 shrink-0 cursor-pointer group/photo"
+                  >
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover/photo:scale-110"
                       loading="lazy"
                       referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-80" />
+
+                    {/* Gallery photos count banner if exists */}
+                    {item.galleryImages && item.galleryImages.length > 0 && (
+                      <div className="absolute bottom-3 left-4 bg-black/60 border border-white/10 px-2 py-1 text-[8px] uppercase tracking-wider text-white font-semibold rounded-xs backdrop-blur-xs flex items-center gap-1">
+                        <ImageIcon className="w-2.5 h-2.5 text-[#C5A070]" />
+                        <span>+{item.galleryImages.length} Plates</span>
+                      </div>
+                    )}
 
                     {/* Dietary Badges inside image block */}
                     <div className="absolute top-4 right-4 flex flex-col gap-1.5">
@@ -387,6 +405,165 @@ export default function MenuView({ onOpenReservation }: MenuViewProps) {
           <span>Tailor Your Table</span>
         </button>
       </div>
+
+      {/* DETAILED GLASS SLIDESHOW MODAL */}
+      <AnimatePresence>
+        {selectedDishDetail && (() => {
+          const allImages = [selectedDishDetail.image, ...(selectedDishDetail.galleryImages || [])];
+          const activeUrl = allImages[activeGalleryIdx] || selectedDishDetail.image;
+          
+          return (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-[#050505]/95 backdrop-blur-md flex items-center justify-center p-4"
+            >
+              <div className="relative w-full max-w-5xl h-auto max-h-[95vh] md:max-h-[90vh] bg-[#0c0c0c] border border-gold-400/20 text-[#fbf9f4] flex flex-col md:flex-row overflow-hidden shadow-2xl rounded-xs">
+                
+                {/* Close Button Trigger */}
+                <button 
+                  onClick={() => setSelectedDishDetail(null)}
+                  className="absolute top-4 right-4 z-20 p-2 bg-black/60 hover:bg-black text-stone-300 hover:text-white rounded-full transition cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {/* Left side slider (7 cols display-wise) */}
+                <div className="flex-1 min-h-[260px] md:min-h-[480px] bg-neutral-900 relative flex items-center justify-center">
+                  <img
+                    src={activeUrl}
+                    alt={selectedDishDetail.name}
+                    className="w-full h-full object-cover absolute inset-0"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+
+                  {/* Arrow controllers */}
+                  {allImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setActiveGalleryIdx(prev => (prev === 0 ? allImages.length - 1 : prev - 1));
+                        }}
+                        className="absolute left-4 z-10 p-2 bg-black/70 hover:bg-black border border-white/10 rounded-full text-white cursor-pointer hover:scale-105 transition"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveGalleryIdx(prev => (prev === allImages.length - 1 ? 0 : prev + 1));
+                        }}
+                        className="absolute right-4 z-10 p-2 bg-black/70 hover:bg-black border border-white/10 rounded-full text-white cursor-pointer hover:scale-105 transition"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Bottom Index dots / indexer */}
+                  <span className="absolute bottom-4 right-4 bg-black/70 px-2.5 py-1 text-[10px] font-mono tracking-widest text-[#C5A070] uppercase font-bold border border-[#C5A070]/25 rounded-xs">
+                    IMAGE {activeGalleryIdx + 1} / {allImages.length}
+                  </span>
+                </div>
+
+                {/* Right side narrative (5 cols details) */}
+                <div className="w-full md:w-[380px] p-8 flex flex-col justify-between border-t md:border-t-0 md:border-l border-gold-400/15 overflow-y-auto max-h-[50vh] md:max-h-none text-left bg-[#080808]">
+                  <div className="space-y-6">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#C5A070] font-bold block mb-1">CULINARY MASTERPIECE</span>
+                      <h3 className="font-serif text-2xl sm:text-3xl font-light tracking-wide text-white leading-tight">
+                        {selectedDishDetail.name}
+                      </h3>
+                      <span className="text-sm font-semibold text-gold-300 block mt-2 font-mono">
+                        {selectedDishDetail.price}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 border-t border-white/5 pt-4">
+                      <span className="text-[9px] uppercase tracking-wider text-stone-500 font-bold block">Gourmet Narration</span>
+                      <p className="text-gray-300 font-sans text-xs font-light leading-relaxed">
+                        {selectedDishDetail.description || "Designed in modern sub-Saharan fine-dining style, combining indigenous organic ingredients with traditional clay-fired charcoal slow techniques."}
+                      </p>
+                    </div>
+
+                    {/* Dietary markers list */}
+                    <div className="space-y-2 border-t border-white/5 pt-4">
+                      <span className="text-[9px] uppercase tracking-wider text-stone-500 font-bold block">Sensory Alignments</span>
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {selectedDishDetail.dietary?.isSpicy && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-red-950/40 border border-red-500/20 text-red-400 font-bold tracking-widest">
+                            Spicy Selection
+                          </span>
+                        )}
+                        {selectedDishDetail.dietary?.isVegetarian && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-green-950/40 border border-green-500/20 text-green-400 font-bold tracking-widest">
+                            Vegetarian
+                          </span>
+                        )}
+                        {selectedDishDetail.dietary?.isVegan && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 font-bold tracking-widest">
+                            Vegan
+                          </span>
+                        )}
+                        {selectedDishDetail.dietary?.isKidsFriendly && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-amber-950/40 border border-gold-400/20 text-gold-400 font-bold tracking-widest">
+                            Kids Friendly
+                          </span>
+                        )}
+                        {selectedDishDetail.dietary?.isGlutenFree && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-blue-950/40 border border-blue-500/20 text-blue-400 font-bold tracking-widest">
+                            Gluten Free
+                          </span>
+                        )}
+                        {selectedDishDetail.dietary?.hasNuts && (
+                          <span className="px-2 py-0.5 text-[8px] font-sans uppercase bg-orange-950/40 border border-orange-500/20 text-orange-400 font-bold tracking-widest">
+                            Contains Nuts
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Thumbnails row below */}
+                    {allImages.length > 1 && (
+                      <div className="space-y-2 border-t border-white/5 pt-4">
+                        <span className="text-[9px] uppercase tracking-wider text-stone-500 font-bold block">Deconstructed Plates</span>
+                        <div className="grid grid-cols-4 gap-2 pt-1">
+                          {allImages.map((u, idx) => (
+                            <button
+                              key={u + idx}
+                              onClick={() => setActiveGalleryIdx(idx)}
+                              className={`aspect-square border bg-neutral-900 overflow-hidden relative transition cursor-pointer ${
+                                idx === activeGalleryIdx 
+                                  ? "border-[#C5A070]" 
+                                  : "border-white/10 hover:border-white/30"
+                              }`}
+                            >
+                              <img src={u} alt="Plate facet" className="w-full h-full object-cover" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setSelectedDishDetail(null);
+                      onOpenReservation();
+                    }}
+                    className="w-full mt-8 bg-gold-500 hover:bg-gold-600 text-black py-3 uppercase tracking-widest font-sans text-[10px] font-black tracking-[0.2em] cursor-pointer"
+                  >
+                    Hold Placement
+                  </button>
+                </div>
+
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }

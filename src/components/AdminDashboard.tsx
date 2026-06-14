@@ -39,12 +39,15 @@ import {
   LockKeyhole,
   Palette,
   Database,
-  ShoppingBag
+  ShoppingBag,
+  FolderOpen
 } from "lucide-react";
 import { MenuItem, GalleryItem, Testimonial, MENU_ITEMS, GALLERY_ITEMS, TESTIMONIALS } from "../types";
 import WebsiteCustomizer from "./WebsiteCustomizer";
 import ContentManager from "./ContentManager";
 import OnaLifestyleManager from "./OnaLifestyleManager";
+import MediaLibraryPanel from "./MediaLibraryPanel";
+import MediaPickerDialog from "./MediaPickerDialog";
 
 // Firebase Imports
 import { auth, db, handleFirestoreError, OperationType } from "../firebase";
@@ -783,6 +786,9 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
   const [menuFormPrice, setMenuFormPrice] = useState("");
   const [menuFormCategories, setMenuFormCategories] = useState<string[]>([]);
   const [menuFormImage, setMenuFormImage] = useState("");
+  const [menuFormGallery, setMenuFormGallery] = useState<string[]>([]);
+  const [isMediaMenuPickerOpen, setIsMediaMenuPickerOpen] = useState(false);
+  const [mediaMenuPickerMode, setMediaMenuPickerMode] = useState<"featured" | "gallery">("featured");
   const [menuFormIsVeh, setMenuFormIsVeh] = useState(false);
   const [menuFormIsVeg, setMenuFormIsVeg] = useState(false);
   const [menuFormIsGF, setMenuFormIsGF] = useState(false);
@@ -797,6 +803,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
     setMenuFormPrice("₦18,500");
     setMenuFormCategories(["starters"]);
     setMenuFormImage("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80");
+    setMenuFormGallery([]);
     setMenuFormIsVeh(false);
     setMenuFormIsVeg(false);
     setMenuFormIsGF(false);
@@ -813,6 +820,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
     setMenuFormPrice(item.price);
     setMenuFormCategories(item.categories);
     setMenuFormImage(item.image);
+    setMenuFormGallery(item.galleryImages || []);
     setMenuFormIsVeh(!!item.dietary?.isVegetarian);
     setMenuFormIsVeg(!!item.dietary?.isVegan);
     setMenuFormIsGF(!!item.dietary?.isGlutenFree);
@@ -845,7 +853,8 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
         isKidsFriendly: menuFormIsKids,
         hasNuts: menuFormAllergies.toLowerCase().includes("nut")
       },
-      image: menuFormImage
+      image: menuFormImage,
+      galleryImages: menuFormGallery
     };
 
     try {
@@ -1171,6 +1180,7 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
                   { id: "messages", label: "Contact Inbox", icon: Mail, roles: ["Super Admin", "Manager", "Reservation Staff"] },
                   { id: "staff", label: "Staff & Role RBAC", icon: Users, roles: ["Super Admin"] },
                   { id: "website-customization", label: "Website Customization", icon: Palette, roles: ["Super Admin", "Admin"] },
+                  { id: "media-library", label: "Media & Visual Content", icon: FolderOpen, roles: ["Super Admin", "Admin", "Manager", "Content Editor"] },
                   { id: "settings", label: "Website Settings", icon: Settings, roles: ["Super Admin"] }
                 ].map(nav => {
                   const allowed = nav.roles.includes(currentUser.role);
@@ -1412,15 +1422,101 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
                             className="w-full bg-white border border-[#CBBDA9] p-2 text-xs focus:outline-none"
                           />
                         </div>
+                        {/* Featured Image Row */}
                         <div className="space-y-1 md:col-span-2">
-                          <label className="text-[10px] tracking-widest uppercase font-bold text-stone-700">Image url</label>
-                          <input
-                            type="text"
-                            value={menuFormImage}
-                            onChange={(e) => setMenuFormImage(e.target.value)}
-                            placeholder="https://images.unsplash.com/..."
-                            className="w-full bg-white border border-[#CBBDA9] p-2 text-xs focus:outline-none text-[10px]"
-                          />
+                          <label className="text-[10px] tracking-widest uppercase font-bold text-stone-700 block">Featured Image</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={menuFormImage}
+                              onChange={(e) => setMenuFormImage(e.target.value)}
+                              placeholder="https://images.unsplash.com/..."
+                              className="flex-1 bg-white border border-[#CBBDA9] p-2 text-xs focus:outline-none text-[10px] truncate"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMediaMenuPickerMode("featured");
+                                setIsMediaMenuPickerOpen(true);
+                              }}
+                              className="px-3 bg-[#3E301F] hover:bg-[#524434] text-[#FAF6F0] uppercase text-[9px] tracking-wider font-bold cursor-pointer rounded-xs"
+                            >
+                              Browse Library
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Multiple Gallery Images Row */}
+                        <div className="space-y-2 md:col-span-2 border-t border-[#CBBDA9]/20 pt-3">
+                          <div className="flex justify-between items-center">
+                            <label className="text-[10px] tracking-widest uppercase font-bold text-stone-700 block text-left">Dish Gallery Images ({menuFormGallery.length})</label>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMediaMenuPickerMode("gallery");
+                                setIsMediaMenuPickerOpen(true);
+                              }}
+                              className="px-2.5 py-1 bg-[#8C6D4F] hover:bg-[#A38261] text-white text-[9px] uppercase tracking-wider font-bold cursor-pointer rounded-xs"
+                            >
+                              + Add Gallery Images
+                            </button>
+                          </div>
+                          
+                          {menuFormGallery.length > 0 ? (
+                            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 bg-[#FCFAF5] p-2.5 border border-[#CBBDA9]/30 rounded-xs">
+                              {menuFormGallery.map((imgUrl, idx) => (
+                                <div key={imgUrl + idx} className="aspect-square bg-white border border-[#CBBDA9]/20 relative group overflow-hidden">
+                                  <img src={imgUrl} alt="Gallery item" className="w-full h-full object-cover" />
+                                  
+                                  {/* Overlay buttons to shift priority/delete */}
+                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1">
+                                    <button
+                                      type="button"
+                                      disabled={idx === 0}
+                                      onClick={() => {
+                                        const arr = [...menuFormGallery];
+                                        const item = arr[idx];
+                                        arr[idx] = arr[idx - 1];
+                                        arr[idx - 1] = item;
+                                        setMenuFormGallery(arr);
+                                      }}
+                                      className="p-1 px-1.5 bg-stone-800 text-white rounded hover:bg-stone-700 disabled:opacity-30 text-[10px] font-bold"
+                                      title="Shift Left"
+                                    >
+                                      ←
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setMenuFormGallery(prev => prev.filter((_, i) => i !== idx));
+                                      }}
+                                      className="p-1 px-1.5 bg-red-800 text-white rounded hover:bg-red-700 text-[10px] font-bold"
+                                      title="Delete"
+                                    >
+                                      ✕
+                                    </button>
+                                    <button
+                                      type="button"
+                                      disabled={idx === menuFormGallery.length - 1}
+                                      onClick={() => {
+                                        const arr = [...menuFormGallery];
+                                        const item = arr[idx];
+                                        arr[idx] = arr[idx + 1];
+                                        arr[idx + 1] = item;
+                                        setMenuFormGallery(arr);
+                                      }}
+                                      className="p-1 px-1.5 bg-stone-800 text-white rounded hover:bg-stone-700 disabled:opacity-30 text-[10px] font-bold"
+                                      title="Shift Right"
+                                    >
+                                      →
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-[9px] text-gray-400 font-sans italic text-left">No secondary dish gallery pictures bound yet. Multi-image visual slides will render on public website details.</p>
+                          )}
                         </div>
 
                         {/* Dietary settings */}
@@ -2021,11 +2117,35 @@ export default function AdminDashboard({ onSettingsUpdate, onCloseAdmin }: Admin
                 <ContentManager currentUser={currentUser} />
               )}
 
+              {/* NEW PANEL: MEDIA & VISUAL CONTENT ENGINE */}
+              {activePanel === "media-library" && (
+                <MediaLibraryPanel currentUser={currentUser} />
+              )}
+
             </div>
           </div>
         )}
 
       </div>
+
+      {/* Floating Reusable Media Picker for Menu Admin Form */}
+      <MediaPickerDialog
+        isOpen={isMediaMenuPickerOpen}
+        onClose={() => setIsMediaMenuPickerOpen(false)}
+        title={mediaMenuPickerMode === "featured" ? "Choose Chef Dish Photo" : "Add Secondary Dish Gallery Images"}
+        allowMultiple={mediaMenuPickerMode === "gallery"}
+        selectedUrls={mediaMenuPickerMode === "gallery" ? menuFormGallery : [menuFormImage]}
+        onSelect={(url) => {
+          if (mediaMenuPickerMode === "featured") {
+            setMenuFormImage(url);
+          }
+        }}
+        onSelectMultiple={(urls) => {
+          if (mediaMenuPickerMode === "gallery") {
+            setMenuFormGallery(prev => Array.from(new Set([...prev, ...urls])));
+          }
+        }}
+      />
     </div>
   );
 }
